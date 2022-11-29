@@ -86,7 +86,14 @@ def cpu_choice(board):
 
   return num
 
-  
+def check_available_pos(board):
+  valid = False
+  for i in board:
+    for j in i:
+      if j.isdigit() == True:
+        return True
+    
+  return valid
 # MAIN CODE -------------
 
 winner = 'N'
@@ -94,9 +101,10 @@ valid = False
 
 player = 'O'
 cpu = 'X'
+free_slot = True
 
-while(winner == 'N'):
-  while(valid == False):
+while(winner == 'N' and free_slot == True):
+  while(valid == False): # player's choice
     num = get_num(board)
     valid = validate_pos(board, num)
     if(valid == False):
@@ -106,17 +114,22 @@ while(winner == 'N'):
   valid = False
   board = update_board(board, num, player)
 
-  num_cpu = cpu_choice(board)
-  board = update_board(board, num_cpu, cpu)
+  # Checks if there's an available spot to place the player's choice
+  free_slot = check_available_pos(board)
+  
+  if(free_slot): #if there's an available spot, CPU's choice
+    num_cpu = cpu_choice(board)
+    board = update_board(board, num_cpu, cpu)
 
-  winner = detect_win(board)
+    winner = detect_win(board)
+
 
 os.system("clear")
 print_board(board)
 
 if(winner == player):
   print("\n--- CONGRATS! YOU WIN! ---\n")
-else:
+elif winner == cpu:
   print("\n--- YOU LOSE! ---")
-
-  
+else:
+  print("\n--- IT'S A DRAW ---")
