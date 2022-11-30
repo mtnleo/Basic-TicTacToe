@@ -1,99 +1,5 @@
-import os, random, time
+import tictactoefuncs as ttt
 
-board = [["1", "2", "3"],
-           ["4", "5", "6"],
-           ["7", "8", "9"]]
-
-def print_board(board):
-  for i in board:
-    print(i)
-    print("\n")
-
-def detect_win(board): #returns "X", "O" or "N" depending on who won or not
-  winner = 'N'
-  
-  # horizontal
-  if("X" == board[0][0] and "X" == board[0][1] and "X" == board[0][2]):
-    winner = 'X'
-  elif("X" == board[1][0] and "X" == board[1][1] and "X" == board[1][2]):
-    winner = 'X'
-  elif("X" == board[2][0] and "X" == board[2][1] and "X" == board[2][2]):
-    winner = 'X'
-  else:
-    if("O" == board[0][0] and "O" == board[0][1] and "O" == board[0][2]):
-      winner = 'O'
-    elif("O" == board[1][0] and "O" == board[1][1] and "O" == board[1][2]):
-      winner = 'O'
-    elif("O" == board[2][0] and "O" == board[2][1] and "O" == board[2][2]):
-      winner = 'O'
-
-  # vertical
-  if("X" == board[0][0] and "X" == board[1][0] and "X" == board[2][0]):
-    winner = 'X'
-  elif("X" == board[0][1] and "X" == board[1][1] and "X" == board[2][1]):
-    winner = 'X'
-  elif("X" == board[0][2] and "X" == board[1][2] and "X" == board[2][2]):
-    winner = 'X'
-  else:
-    if("O" == board[0][0] and "O" == board[1][0] and "O" == board[2][0]):
-      winner = 'O'
-    elif("O" == board[0][1] and "O" == board[1][1] and "O" == board[2][1]):
-      winner = 'O'
-    elif("O" == board[0][2] and "O" == board[1][2] and "O" == board[2][2]):
-      winner = 'O'
-
-  # diagon-alley ;)
-  if("X" == board[0][0] and "X" == board[1][1] and "X" == board[2][2]):
-    winner = 'X'
-  elif("X" == board[0][2] and "X" == board[1][1] and "X" == board[2][0]):
-    winner = 'X'
-  else:
-    if("O" == board[0][0] and "O" == board[1][1] and "O" == board[2][2]):
-      winner = 'O'
-    elif("O" == board[0][2] and "O" == board[1][1] and "O" == board[2][0]):
-      winner = 'O'
-
-  return winner
-
-def get_num(board):
-  os.system("clear")
-  print_board(board)
-  num = input("--- SELECT A NUMBER TO PLACE YOUR CHOICE ---\n")
-  return num
-
-def validate_pos(board, num):
-  valid = False
-  if(int(num) > 0 and int(num) < 10):
-    for i in board:
-      if num in i:
-        valid = True
-
-  return valid
-
-def update_board(board, num, player):
-  for i in board:
-    if(num in i):
-      pos = i.index(num)
-      i[pos] = player
-
-  return board
-
-def cpu_choice(board):
-  valid = False
-  while valid == False:
-    num = str(random.randint(1, 9))
-    valid = validate_pos(board, num)
-
-  return num
-
-def check_available_pos(board):
-  valid = False
-  for i in board:
-    for j in i:
-      if j.isdigit() == True:
-        return True
-    
-  return valid
 # MAIN CODE -------------
 
 winner = 'N'
@@ -105,27 +11,27 @@ free_slot = True
 
 while(winner == 'N' and free_slot == True):
   while(valid == False): # player's choice
-    num = get_num(board)
-    valid = validate_pos(board, num)
+    num = ttt.get_num(ttt.board)
+    valid = ttt.validate_pos(ttt.board, num)
     if(valid == False):
       print("\n| X | Incorrect value, try again! | X |\n")
-      time.sleep(1.4)
+      ttt.time.sleep(1.4)
       
   valid = False
-  board = update_board(board, num, player)
+  board = ttt.update_board(ttt.board, num, player)
 
   # Checks if there's an available spot to place the player's choice
-  free_slot = check_available_pos(board)
+  free_slot = ttt.check_available_pos(board)
   
   if(free_slot): #if there's an available spot, CPU's choice
-    num_cpu = cpu_choice(board)
-    board = update_board(board, num_cpu, cpu)
+    num_cpu = ttt.cpu_choice(board)
+    board = ttt.update_board(board, num_cpu, cpu)
 
-    winner = detect_win(board)
+    winner = ttt.detect_win(board)
 
 
-os.system("clear")
-print_board(board)
+ttt.os.system("clear")
+ttt.print_board(board)
 
 if(winner == player):
   print("\n--- CONGRATS! YOU WIN! ---\n")
